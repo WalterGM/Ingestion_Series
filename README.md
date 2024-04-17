@@ -21,4 +21,4 @@ and override the executeJob method.
 
 
 ELT Design
-![ELT Design.jpeg](..%2F..%2FDownloads%2FELT%20Design.jpeg)
+![ELT Design.jpeg](ELT%20Design.jpeg)
