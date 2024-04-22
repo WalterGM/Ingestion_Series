@@ -5,35 +5,46 @@ ThisBuild / scalaVersion := "2.12.18"
 val sparkVersion = "3.5.0"
 val postgresVersion = "42.7.2"
 
-
 lazy val root = (project in file("."))
   .settings(
-    name := "Spark_POC"
+    name := "Ingestion_Series"
   )
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core" % sparkVersion,
-  "org.apache.spark" %% "spark-sql" % sparkVersion,
-  "org.apache.spark" %% "spark-mllib" % sparkVersion,
+  "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
+  "org.apache.spark" %% "spark-sql" % sparkVersion % "provided",
+  "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
   "com.typesafe" % "config" % "1.4.3",
   "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.20",
-  "commons-io" % "commons-io" % "2.15.1",
   "org.postgresql" % "postgresql" % postgresVersion,
   "com.google.cloud" % "google-cloud-secretmanager" % "2.37.0",
-  "io.spray" %%  "spray-json" % "1.3.6",
-  "com.google.cloud" % "google-cloud-bigquery" % "2.38.1",
-  "com.google.cloud.spark" %% "spark-bigquery-with-dependencies" % "0.37.0"
+  "io.spray" %% "spray-json" % "1.3.6"
 )
 
 dependencyOverrides ++= Seq(
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.4"
 )
 
+ThisBuild/assemblyShadeRules:= Seq(
+  ShadeRule.rename("com.google.common.**" -> "my_conf.@1").inAll
+)
+
 ThisBuild / assemblyMergeStrategy := {
-  case PathList("javax", "servlet", xs@_*) => MergeStrategy.first
-  case PathList(ps@_*) if ps.last endsWith ".html" => MergeStrategy.first
+  case PathList("META-INF", xs @ _*) =>
+    xs map { _.toLowerCase } match {
+      case "manifest.mf" :: Nil | "index.list" :: Nil | "dependencies" :: Nil =>
+        MergeStrategy.discard
+      case ps @ x :: xs
+          if ps.last.endsWith(".sf") || ps.last.endsWith(".dsa") =>
+        MergeStrategy.discard
+      case "plexus" :: xs =>
+        MergeStrategy.discard
+      case "services" :: xs =>
+        MergeStrategy.filterDistinctLines
+      case "spring.schemas" :: Nil | "spring.handlers" :: Nil =>
+        MergeStrategy.filterDistinctLines
+      case _ => MergeStrategy.first
+    }
   case "application.conf" => MergeStrategy.concat
-  case "unwanted.txt" => MergeStrategy.discard
-  case x =>
-    val oldStrategy = (ThisBuild / assemblyMergeStrategy).value
-    oldStrategy(x)
+  case "reference.conf"   => MergeStrategy.concat
+  case _                  => MergeStrategy.first
 }
