@@ -6,7 +6,7 @@ object FilteringNulls {
 
   def apply()(df: DataFrame): DataFrame = {
 
-    df.na.drop("all")
+    df.na.drop("any")
   }
 
 }

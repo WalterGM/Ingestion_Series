@@ -17,14 +17,15 @@ libraryDependencies ++= Seq(
   "com.google.cloud.bigdataoss" % "gcs-connector" % "hadoop3-2.2.20",
   "org.postgresql" % "postgresql" % postgresVersion,
   "com.google.cloud" % "google-cloud-secretmanager" % "2.37.0",
-  "io.spray" %% "spray-json" % "1.3.6"
+  "io.spray" %% "spray-json" % "1.3.6",
+  "org.scalatest" %% "scalatest" % "3.2.18" % "test"
 )
 
 dependencyOverrides ++= Seq(
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.4"
 )
 
-ThisBuild/assemblyShadeRules:= Seq(
+ThisBuild / assemblyShadeRules := Seq(
   ShadeRule.rename("com.google.common.**" -> "my_conf.@1").inAll
 )
 
