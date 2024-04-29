@@ -19,7 +19,7 @@ object SeriesEL extends baseJob {
       spark,
       secret,
       "challenge",
-      "(Select * From \"ce.period\")"
+      "(Select * From \"ce.period\") period"
     )
     val enrichPeriodDF =
       dfPeriod
