@@ -33,7 +33,7 @@ object SeriesEL extends baseJob {
       spark,
       secret,
       "challenge",
-      s"(${config.getString("queryDataType")})"
+      s"(${config.getString("queryDataType")}) datatype"
     )
     val enrinchDataTypeDF =
       dfDataType
@@ -50,7 +50,7 @@ object SeriesEL extends baseJob {
       spark,
       secret,
       "challenge",
-      s"(${config.getString("querySeriesInfo")})"
+      s"(${config.getString("querySeriesInfo")}) seriesInfo"
     )
     val enrichSeriesInfo =
       dfSeriesInfo
@@ -67,7 +67,7 @@ object SeriesEL extends baseJob {
       spark,
       secret,
       "challenge",
-      s"(${config.getString("querySuperSector")})"
+      s"(${config.getString("querySuperSector")}) superSector"
     )
     val enrichSuperSector =
       dfSuperSector
@@ -84,7 +84,7 @@ object SeriesEL extends baseJob {
           spark,
           secret,
           "challenge",
-          s"(${config.getString("querySeries")})"
+          s"(${config.getString("querySeries")}) allSeries"
         )
     val enrichSeriesDF =
       dfSeries
